@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy New Year 2025!</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            color: #FFD700;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+        
+        .input-section {
+            margin: 20px 0;
+        }
+        
+        input {
+            width: 80%;
+            padding: 12px 15px;
+            border: none;
+            border-radius: 30px;
+            font-size: 1rem;
+            margin-bottom: 15px;
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        button {
+            background: linear-gradient(45deg, #25D366, #128C7E);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 30px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 10px 5px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .wish-section {
+            display: none;
+            animation: fadeIn 1s;
+        }
+        
+        .wish-text {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            margin: 20px 0;
+        }
+        
+        .name-highlight {
+            color: #FFD700;
+            font-weight: bold;
+        }
+        
+        .year-highlight {
+            color: #FF6B6B;
+            font-weight: bold;
+        }
+        
+        /* Confetti */
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #f00;
+            border-radius: 50%;
+            animation: fall 5s linear infinite;
+            z-index: -1;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes fall {
+            to {
+                transform: translateY(100vh);
+            }
+        }
+        
+        /* Shared mode (hides input) */
+        .shared-mode .input-section {
+            display: none;
+        }
+        
+        .shared-mode .wish-section {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="mainContainer">
+        <h1>🎊 Happy New Year 2025! 🎉</h1>
+        
+        <div class="input-section" id="inputSection">
+            <p>Enter your name to create a wish:</p>
+            <input type="text" id="userName" placeholder="Your Name">
+            <button onclick="generateWish()">Create Wish</button>
+        </div>
+        
+        <div class="wish-section" id="wishSection">
+            <div class="wish-text">
+                Dear <span class="name-highlight" id="displayName">[Name]</span>,<br><br>
+                As we welcome <span class="year-highlight">2025</span>,<br>
+                may this year bring you endless joy,<br>
+                good health, and prosperity.<br><br>
+                Wishing you success in all your dreams!<br><br>
+                Happy New Year! 🥂✨
+            </div>
+            
+            <button onclick="shareOnWhatsApp()">Share on WhatsApp</button>
+        </div>
+    </div>
+
+    <!-- Fireworks Sound (auto-plays on wish generation) -->
+    <audio id="fireworkSound" src="https://assets.mixkit.co/sfx/preview/mixkit-happy-new-year-sound-2966.mp3" preload="auto"></audio>
+
+    <script>
+        // Check if shared via URL (e.g., ?name=John)
+        const urlParams = new URLSearchParams(window.location.search);
+        const sharedName = urlParams.get('name');
+        
+        if (sharedName) {
+            // Show only the wish (hide input)
+            document.getElementById('mainContainer').classList.add('shared-mode');
+            document.getElementById('displayName').textContent = sharedName;
+            playFireworkSound();
+            createConfetti();
+        }
+        
+        function generateWish() {
+            const userName = document.getElementById('userName').value.trim();
+            
+            if (!userName) {
+                alert("Please enter your name!");
+                return;
+            }
+            
+            document.getElementById('displayName').textContent = userName;
+            document.getElementById('inputSection').style.display = 'none';
+            document.getElementById('wishSection').style.display = 'block';
+            
+            playFireworkSound();
+            createConfetti();
+        }
+        
+        function shareOnWhatsApp() {
+            const userName = document.getElementById('userName').value.trim() || sharedName;
+            const shareUrl = `${window.location.origin}${window.location.pathname}?name=${encodeURIComponent(userName)}`;
+            
+            const wishMessage = 
+                `🎉 *Happy New Year 2025!* 🎉\n\n` +
+                `Dear ${userName},\n\n` +
+                `As we welcome *2025*, may this year bring you endless joy, good health, and prosperity.\n\n` +
+                `Wishing you success in all your dreams!\n\n` +
+                `Happy New Year! 🥂✨\n\n` +
+                `Create your wish: ${shareUrl}`;
+            
+            window.open(`https://wa.me/?text=${encodeURIComponent(wishMessage)}`, '_blank');
+        }
+        
+        function playFireworkSound() {
+            const sound = document.getElementById('fireworkSound');
+            sound.currentTime = 0;
+            sound.play().catch(e => console.log("Auto-play blocked:", e));
+        }
+        
+        function createConfetti() {
+            const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#FFD700'];
+            
+            for (let i = 0; i < 100; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.top = -10 + 'px';
+                confetti.style.width = Math.random() * 10 + 5 + 'px';
+                confetti.style.height = confetti.style.width;
+                confetti.style.animationDuration = Math.random() * 3 + 2 + 's';
+                confetti.style.animationDelay = Math.random() * 2 + 's';
+                
+                document.body.appendChild(confetti);
+                
+                setTimeout(() => confetti.remove(), 5000);
+            }
+        }
+    </script>
+</body>
+</html>
